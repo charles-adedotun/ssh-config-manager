@@ -1,5 +1,3 @@
-# ssh-config-manager/README.md
-
 # SSH Config Manager
 
 This project provides a simple and efficient way to manage your SSH configurations using Make commands and a Python script.
@@ -14,7 +12,6 @@ This project provides a simple and efficient way to manage your SSH configuratio
 1. Clone this repository:
    ```
    git clone https://github.com/charles-adedotun/ssh-config-manager.git
-   cd ssh-config-manager
    ```
 
 2. Run the installation command:

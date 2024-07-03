@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# ssh-config-manager/ssh_config_manager.py
+# ssh_config_manager.py
 
 import os
 import sys

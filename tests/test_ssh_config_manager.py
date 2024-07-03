@@ -1,4 +1,4 @@
-# ssh-config-manager/tests/test_ssh_config_manager.py
+# tests/test_ssh_config_manager.py
 
 import pytest
 import os

@@ -1,4 +1,4 @@
-# ssh-config-manager/Makefile
+# Makefile
 
 .PHONY: all install uninstall clean test add list remove backup restore help
 
