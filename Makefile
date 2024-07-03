@@ -3,8 +3,10 @@
 .PHONY: all install uninstall clean test add list remove backup restore help
 
 SCRIPT_NAME = ssh_config_manager.py
-INSTALL_DIR = /usr/local/bin
+INSTALL_DIR = $(HOME)/.local/bin
 VENV_DIR = venv
+PYTHON_VERSION = 3.10
+PYTHON_MAJOR_MINOR = 3.10
 
 # ANSI color codes
 GREEN = \033[0;32m
@@ -15,22 +17,38 @@ NC = \033[0m # No Color
 
 all: help
 
-venv: requirements.txt
-	@python3 -m venv $(VENV_DIR)
+install-python:
+	@echo "$(YELLOW)Checking for Python $(PYTHON_VERSION)...$(NC)"
+	@if command -v python$(PYTHON_MAJOR_MINOR) > /dev/null; then \
+		echo "$(GREEN)Python $(PYTHON_VERSION) is already installed.$(NC)"; \
+	elif command -v pyenv > /dev/null; then \
+		echo "$(YELLOW)Installing Python $(PYTHON_VERSION) using pyenv...$(NC)"; \
+		pyenv install $(PYTHON_VERSION) && pyenv local $(PYTHON_VERSION); \
+	else \
+		echo "$(RED)Unable to install Python $(PYTHON_VERSION). Please install it manually or use pyenv.$(NC)"; \
+		exit 1; \
+	fi
+
+venv: install-python requirements.txt
+	@echo "$(YELLOW)Creating virtual environment...$(NC)"
+	@python$(PYTHON_MAJOR_MINOR) -m venv $(VENV_DIR) || python3 -m venv $(VENV_DIR)
+	@./$(VENV_DIR)/bin/pip install --upgrade pip
 	@./$(VENV_DIR)/bin/pip install -r requirements.txt
 	@echo "$(GREEN)Virtual environment created and dependencies installed.$(NC)"
 
 install: venv
 	@echo "$(YELLOW)Installing $(SCRIPT_NAME) to $(INSTALL_DIR)$(NC)"
-	@sudo cp $(SCRIPT_NAME) $(INSTALL_DIR)/$(SCRIPT_NAME)
-	@sudo chmod +x $(INSTALL_DIR)/$(SCRIPT_NAME)
+	@mkdir -p $(INSTALL_DIR)
+	@cp $(SCRIPT_NAME) $(INSTALL_DIR)/$(SCRIPT_NAME)
+	@chmod +x $(INSTALL_DIR)/$(SCRIPT_NAME)
 	@echo "$(GREEN)Installation complete. You can now use 'make' commands to manage SSH configs.$(NC)"
+	@echo "$(YELLOW)Please add $(INSTALL_DIR) to your PATH if it's not already there.$(NC)"
 	@echo "\n$(CYAN)Available commands:$(NC)"
 	@$(MAKE) --no-print-directory help
 
 uninstall:
 	@echo "$(YELLOW)Uninstalling $(SCRIPT_NAME) from $(INSTALL_DIR)$(NC)"
-	@sudo rm -f $(INSTALL_DIR)/$(SCRIPT_NAME)
+	@rm -f $(INSTALL_DIR)/$(SCRIPT_NAME)
 	@echo "$(GREEN)Uninstallation complete.$(NC)"
 
 clean:
@@ -65,13 +83,14 @@ restore:
 	@./$(VENV_DIR)/bin/python $(SCRIPT_NAME) restore
 
 help:
+	@echo "Available commands:"
 	@echo "  $(GREEN)make install$(NC)    - Install the SSH config manager"
 	@echo "  $(RED)make uninstall$(NC)  - Uninstall the SSH config manager"
+	@echo "  $(CYAN)make test$(NC)       - Run tests"
 	@echo "  $(GREEN)make add$(NC)        - Add a new SSH config entry"
 	@echo "  $(GREEN)make list$(NC)       - List all SSH config entries"
 	@echo "  $(YELLOW)make remove$(NC)     - Remove an SSH config entry"
+	@echo "  $(RED)make clean$(NC)      - Clean up temporary files"
 	@echo "  $(GREEN)make backup$(NC)     - Backup the current SSH config"
 	@echo "  $(YELLOW)make restore$(NC)    - Restore a previous SSH config backup"
-	@echo "  $(RED)make clean$(NC)      - Clean up temporary files"
-	@echo "  $(CYAN)make test$(NC)       - Run tests"
 	@echo "  $(CYAN)make help$(NC)       - Show this help message"

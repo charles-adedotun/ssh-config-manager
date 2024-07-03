@@ -6,21 +6,34 @@ This project provides a simple and efficient way to manage your SSH configuratio
 
 ## Prerequisites
 
-- Python 3.6+
+- Python 3.10
 - make
 
 ## Installation
 
 1. Clone this repository:
    ```
-   git clone https://github.com/yourusername/ssh-config-manager.git
+   git clone https://github.com/charles-adedotun/ssh-config-manager.git
    cd ssh-config-manager
    ```
 
-2. Install the SSH Config Manager:
+2. Run the installation command:
    ```
    make install
    ```
+
+   This command will attempt to install Python 3.10 using pyenv if it's not already on your system, create a virtual environment, install all required dependencies, and set up the SSH Config Manager.
+
+3. Add the installation directory to your PATH if it's not already there:
+   ```
+   echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+   source ~/.bashrc
+   ```
+   (Use `~/.zshrc` instead of `~/.bashrc` if you're using Zsh)
+
+4. If the automatic installation fails, you may need to install Python 3.10 manually. You can download it from [python.org](https://www.python.org/downloads/) or use pyenv. After installing Python 3.10, run `make install` again.
+
+Note: This installation process does not require sudo privileges and installs the script in your user's home directory.
 
 ## Usage
 
